@@ -10,6 +10,7 @@ neovim基础开发配置，这个配置以较小的体积来获得基本的开�
 2.  sudo apt install neovim (ubuntu 18以上好像才有) / sudo pacman -S neovim
 3.  pip3 install neovim
 4.  sudo apt install node npm / sudo pacman -S nodejs npm
+5.  打开vim，在命令行模式下输入PlugInstall安装插件
 
 ## 参考配置
 
