@@ -39,6 +39,8 @@
     autocmd BufReadPost * execute "normal g'\""
 
 " 按键映射
+    " 修改默认键
+        nnoremap Y y$
     " 重载操作
         map <c-s>                           <nop>
         map <c-q>                           <nop>
@@ -48,6 +50,12 @@
         nmap <c-q>                          :q<cr>
         " F5：丢失更改重新读取
         nnoremap <F5>                       :e!<cr>
+        " Ctrl+y：复制到剪切板
+        vmap <c-y>                          "+y
+        nmap <c-y>                          "+y
+        " Ctrl+p：从剪切板中粘贴
+        vmap <c-p>                          "+p
+        nmap <c-p>                          "+p
 
     " Leader键设置为空格键
         let mapleader=' '
@@ -57,7 +65,16 @@
         nmap s                              <nop>
         " sn = 取消高亮
         nnoremap <silent> sn                :nohl<cr>
+        " sq = 关闭当前缓冲区
+        nnoremap <silent> sq                :bd<cr>
+        " se = 反转wrap
+        nnoremap se                         :set wrap!<cr>
+        " sf = 手动定义文件类型
+        nnoremap sf                         :set filetype=
 
+    " 把反斜杠重定义为调用宏
+        nnoremap \                          @q
+        nnoremap \|                         @w
 
     " 移动居中
         nnoremap j                          jzz
@@ -91,13 +108,57 @@
         imap jk <esc>
 
 " 插件定义
+    " 插件正常工作配置
+        set nocompatible
+        filetype on
+        filetype indent on
+        filetype plugin on
+        filetype plugin indent on
+
 call plug#begin('~/.config/nvim/plugged')
     " 外观
     Plug 'vim-airline/vim-airline'
     Plug 'dracula/vim'
+    " 高亮当前光标下的词
+    Plug 'RRethy/vim-illuminate'
 
     " coc补全框架
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+    " 中文vim文档
+    Plug 'yianwillis/vimcdoc'
+
+    " nerdtree
+    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+    Plug 'Xuyuanp/nerdtree-git-plugin'
+
+    " ranger
+    Plug 'rbgrouleff/bclose.vim'
+    Plug 'francoiscabrol/ranger.vim'
+
+    " lazygit
+    Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
+
+    " undotree
+    Plug 'mbbill/undotree'
+
+    " bookmark
+    Plug 'kshenoy/vim-signature'
+
+    " startify 起始页
+    Plug 'mhinz/vim-startify'
+
+    " comment 快速注释
+    Plug 'scrooloose/nerdcommenter'
+
+    " clipboard 寄存器面板
+    Plug 'junegunn/vim-peekaboo'
+
+    " fzf
+    Plug 'junegunn/fzf.vim'
+
+    " clever-f fFtT增强
+    Plug 'rhysd/clever-f.vim'
 call plug#end()
 
 " 插件配置
@@ -136,10 +197,15 @@ call plug#end()
 
         " 去除背景高亮
         highlight Normal guibg=NONE ctermbg=None
+        highlight comment ctermfg=DarkGreen guifg=#008800
 
         " 打开行高亮, 定义行高亮样式
         set cursorline
         highlight CursorLine ctermfg=None ctermbg=236 guifg=None guibg=#111111
+
+    " vim-illuminate
+        let g:Illuminate_delay = 750
+        hi illuminatedWord ctermbg=236 guibg=#555555
 
     " coc.nvim
         set hidden
@@ -169,4 +235,91 @@ call plug#end()
         let g:coc_global_extensions = [
                                       \ 'coc-pairs',
                                       \ 'coc-git',
+                                      \ 'coc-snippets',
+                                      \ 'coc-actions',
+                                      \ 'coc-json',
+                                      \ 'coc-vimlsp'
                                       \]
+
+        " 报错跳转
+        nmap <silent> g[ <Plug>(coc-diagnostic-prev)
+        nmap <silent> g] <Plug>(coc-diagnostic-next)
+
+        " 定义跳转
+        nmap <silent> gd <Plug>(coc-definition)
+        " 查找引用
+        nmap <silent> gr <Plug>(coc-references)
+
+        " 重命名
+        nmap <leader>rn <Plug>(coc-rename)
+
+        " 格式化当前文件
+        command! -nargs=0 Format :call CocAction('format')
+
+        " 调用snippets
+        imap <c-j> <plug>(coc-snippets-expand)
+        " snippets的下一个参数
+        let g:coc_snippet_next = '<c-j>'
+        " snippets的上一个参数
+        let g:coc_snippet_prev = '<c-k>'
+
+        " 在markdown里不要自动补全`
+        autocmd FileType markdown let b:coc_pairs_disabled = ['`']
+
+    "nerdtree
+        " st = 打开nerdtree
+        map st :NERDTreeToggle<cr>
+
+    "nerdtree-git-plugin
+        let g:NERDTreeIndicatorMapCustom = {
+            \ "Modified" : "✹",
+            \ "Staged"   : "✚",
+            \ "Untracked": "✭",
+            \ "Renamed"  : "➜",
+            \ "Unmerged" : "═",
+            \ "Deleted"  : "✖",
+            \ "Dirty"    : "✗",
+            \ "Clean"    : "✔︎",
+            \ "Unknown"  : "?"
+        \ }
+
+    "ranger
+        " <leader>f = 打开ranger
+
+    "lazygit
+        let g:lazygit_floating_window_winblend = 0 " transparency of floating window
+        let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
+        let g:lazygit_floating_window_corner_chars = ['╭', '╮', '╰', '╯'] " customize lazygit popup window corner characters
+        let g:lazygit_use_neovim_remote = 0 " fallback to 0 if neovim-remote is not installed
+        " sg = 打开lazygit
+        nmap <silent> sg :LazyGit<cr>
+
+    "undotree
+        " su = 打开undotree
+        map su :UndotreeToggle<cr>
+
+    "vim-signature
+        " 设置mark的按键
+        let g:SignatureMap = {
+            \ 'Leader'             :  "m",
+            \ 'PlaceNextMark'      :  "m,",
+            \ 'DeleteMark'         :  "sd",
+            \ 'GotoNextSpotAlpha'  :  "m<LEADER>",
+            \ 'GotoNextSpotByPos'  :  "mn",
+            \ 'GotoPrevSpotByPos'  :  "mp",
+            \ 'ListLocalMarks'     :  "m/",
+            \ }
+
+    "nerdcommenter
+        let g:NERDSpaceDelims = 1
+        let g:NERDCompactSexyComs = 1
+        let g:NERDDefaultAlign = 'left'
+        let g:NERDAltDelims_java = 1
+        let g:NERDCommentEmptyLines = 1
+        let g:NERDTrimTrailingWhitespace = 1
+        let g:NERDToggleCheckAllLines = 1
+
+    "clever-f
+        " 重载;和,
+        map ; <Plug>(clever-f-repeat-forward)
+        map , <Plug>(clever-f-repeat-back)
