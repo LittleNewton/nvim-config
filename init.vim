@@ -323,3 +323,19 @@ call plug#end()
         " 重载;和,
         map ; <Plug>(clever-f-repeat-forward)
         map , <Plug>(clever-f-repeat-back)
+
+" 配置 coc TAB 补全行为，适配 coc 0.0.82 版本，风格类似 VScode
+
+  inoremap <silent><expr> <TAB>
+    \ coc#pum#visible() ? coc#_select_confirm() :
+    \ coc#expandableOrJumpable() ?
+    \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
+
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
+
+  let g:coc_snippet_next = '<tab>'

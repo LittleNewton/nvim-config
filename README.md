@@ -1,16 +1,49 @@
-# base_vim_config
+# NeoVim 配置
 
-## 介绍
-neovim基础开发配置，这个配置以较小的体积来获得基本的开发环境。
+## 1. 介绍
 
-## 安装教程
+neovim 基础开发配置，这个配置以较小的体积来获得基本的开发环境。
 
-0.  如果安装过neovim的话，第一步会失败，因为已经有配置了，手动操作一下
-1.  git clone https://gitee.com/karl1864/base_vim_config ~/.config/nvim
-2.  sudo apt install neovim (ubuntu 18以上好像才有) / sudo pacman -S neovim
-3.  pip3 install neovim
-4.  sudo apt install node npm / sudo pacman -S nodejs npm
-5.  打开vim，在命令行模式下输入PlugInstall安装插件
+## 2. 安装教程
+
+### 2.1 安装 NeoVim
+
+如果 Debian 或 RHEL 仓库里的 NeoVim 版本小于 0.7，可通过 GitHub 下载安装包并手动加载。
+
+NeoVim [Release](https://github.com/neovim/neovim/releases) 页面。
+
+以 Debian 为例：
+
+``` bash
+# 下载 nvim-linux64.deb
+sudo apt install ./nvim-linux64.deb
+```
+### 2.2 下载配置文件
+
+```
+git clone https://gitee.com/littleNewton/base_vim_config.git ~/.config/nvim
+```
+
+### 2.3 安装 Python 依赖
+
+``` bash
+# 切换到 root 用户，不要用 Anaconda
+pip3 install neovim
+pip3 install pynvim
+```
+
+### 2.4 安装 JavaScript 依赖
+
+```
+sudo apt install nodejs npm
+```
+
+### 2.5 安装插件
+
+```
+# 打开 vim，在命令行模式下输入 PlugInstall 安装插件
+:PlugInstall
+```
 
 ## 参考配置
 
