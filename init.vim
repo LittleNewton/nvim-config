@@ -325,7 +325,6 @@ call plug#end()
         map , <Plug>(clever-f-repeat-back)
 
 " 配置 coc TAB 补全行为，适配 coc 0.0.82 版本，风格类似 VScode
-
   inoremap <silent><expr> <TAB>
     \ coc#pum#visible() ? coc#_select_confirm() :
     \ coc#expandableOrJumpable() ?
