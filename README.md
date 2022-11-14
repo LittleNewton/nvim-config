@@ -18,10 +18,11 @@ NeoVim [Release](https://github.com/neovim/neovim/releases) 页面。
 # 下载 nvim-linux64.deb
 sudo apt install ./nvim-linux64.deb
 ```
+
 ### 2.2 下载配置文件
 
-```
-git clone https://gitee.com/littleNewton/base_vim_config.git ~/.config/nvim
+``` bash
+git clone https://github.com/LittleNewton/neovim_config.git ~/.config/nvim
 ```
 
 ### 2.3 安装 Python 依赖
@@ -34,13 +35,13 @@ pip3 install pynvim
 
 ### 2.4 安装 JavaScript 依赖
 
-```
+``` bash
 sudo apt install nodejs npm
 ```
 
 ### 2.5 安装插件
 
-```
+``` bash
 # 打开 vim，在命令行模式下输入 PlugInstall 安装插件
 :PlugInstall
 ```
