@@ -39,6 +39,12 @@ pip3 install pynvim
 sudo apt install nodejs npm
 ```
 
+安装 npm 插件：
+
+```
+sudo npm install -g neovim yarn
+```
+
 ### 2.5 安装插件
 
 ``` bash
