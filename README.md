@@ -45,11 +45,25 @@ sudo apt install nodejs npm
 sudo npm install -g neovim yarn
 ```
 
-### 2.5 安装插件
+### 2.5 安装 ruby
+
+```
+sudo apt install ruby gem
+```
+
+### 2.6 安装 nvim 插件
 
 ``` bash
 # 打开 vim，在命令行模式下输入 PlugInstall 安装插件
 :PlugInstall
+```
+
+安装 coc 插件
+
+在 nvim 里，输入以下命令可安装 coc 的插件。
+
+```
+:CocInstall coc-json
 ```
 
 ## 参考配置

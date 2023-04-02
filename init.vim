@@ -159,6 +159,12 @@ call plug#begin('~/.config/nvim/plugged')
 
     " clever-f fFtT增强
     Plug 'rhysd/clever-f.vim'
+
+    " Wildfire
+    Plug 'gcmt/wildfire.vim'
+
+    " 添加成对的括号、引号等
+    Plug 'tpope/vim-surround'
 call plug#end()
 
 " 插件配置
@@ -238,7 +244,8 @@ call plug#end()
                                       \ 'coc-snippets',
                                       \ 'coc-actions',
                                       \ 'coc-json',
-                                      \ 'coc-vimlsp'
+                                      \ 'coc-vimlsp',
+                                      \ 'coc-json'
                                       \]
 
         " 报错跳转
@@ -338,3 +345,5 @@ call plug#end()
   endfunction
 
   let g:coc_snippet_next = '<tab>'
+  let g:snips_author = 'littleNewton'
+  

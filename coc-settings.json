@@ -3,6 +3,7 @@
     "suggest.noselect": true,
     "suggest.enablePreselect": false,
     "codeLens.enable": true,
+    "list.previousKeymap": "<C-u>",
     "snippets.ultisnips.directories": [
         "snippets",
         "$HOME/.config/nvim/snippets/"
