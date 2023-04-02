@@ -165,6 +165,10 @@ call plug#begin('~/.config/nvim/plugged')
 
     " 添加成对的括号、引号等
     Plug 'tpope/vim-surround'
+
+    " 纵向编辑扩展
+    Plug 'mg979/vim-visual-multi'
+
 call plug#end()
 
 " 插件配置
@@ -245,7 +249,15 @@ call plug#end()
                                       \ 'coc-actions',
                                       \ 'coc-json',
                                       \ 'coc-vimlsp',
-                                      \ 'coc-json'
+                                      \ 'coc-marketplace',
+                                      \ 'coc-explorer',
+                                      \ 'coc-yaml',
+                                      \ 'coc-python',
+                                      \ 'coc-jedi',
+                                      \ 'coc-docker',
+                                      \ 'coc-clangd',
+                                      \ 'coc-flutter',
+                                      \ 'actions'
                                       \]
 
         " 报错跳转
@@ -269,6 +281,8 @@ call plug#end()
         let g:coc_snippet_next = '<c-j>'
         " snippets的上一个参数
         let g:coc_snippet_prev = '<c-k>'
+
+        let g:snips_author = 'littleNewton'
 
         " 在markdown里不要自动补全`
         autocmd FileType markdown let b:coc_pairs_disabled = ['`']
