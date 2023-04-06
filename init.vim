@@ -257,7 +257,7 @@ call plug#end()
                                       \ 'coc-docker',
                                       \ 'coc-clangd',
                                       \ 'coc-flutter',
-                                      \ 'actions'
+                                      \ 'coc-actions'
                                       \]
 
         " 报错跳转
