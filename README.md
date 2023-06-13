@@ -12,11 +12,24 @@ neovim 基础开发配置，这个配置以较小的体积来获得基本的开�
 
 NeoVim [Release](https://github.com/neovim/neovim/releases) 页面。
 
-以 Debian 为例：
+以 Debian 12 为例：
 
 ``` bash
 # 下载 nvim-linux64.deb
-sudo apt install ./nvim-linux64.deb
+cd ~
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+chmod u+x ~/nvim.appimage
+sudo mv ~/nvim.appimage /usr/local/bin/nvim.appimage
+
+# 创建可执行文件的软链接
+CUSTOM_NVIM_PATH=/usr/local/bin/nvim.appimage
+
+sudo update-alternatives --install /usr/bin/ex      ex          "${CUSTOM_NVIM_PATH}"   110
+sudo update-alternatives --install /usr/bin/vi      vi          "${CUSTOM_NVIM_PATH}"   110
+sudo update-alternatives --install /usr/bin/view    view        "${CUSTOM_NVIM_PATH}"   110
+sudo update-alternatives --install /usr/bin/vim     vim         "${CUSTOM_NVIM_PATH}"   110
+sudo update-alternatives --install /usr/bin/nvim    nvim        "${CUSTOM_NVIM_PATH}"   110
+sudo update-alternatives --install /usr/bin/vimdiff vimdiff     "${CUSTOM_NVIM_PATH}"   110
 ```
 
 ### 2.2 下载配置文件
@@ -35,19 +48,21 @@ pip3 install pynvim
 
 ### 2.4 安装 JavaScript 依赖
 
+在 NeoVim 里可以使用 Node.JS 提供的功能实现许多 LSP.
+
 ``` bash
 sudo apt install nodejs npm
 ```
 
 安装 npm 插件：
 
-```
+``` bash
 sudo npm install -g neovim yarn
 ```
 
 ### 2.5 安装 ruby
 
-```
+``` bash
 sudo apt install ruby gem
 ```
 
