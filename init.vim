@@ -360,4 +360,3 @@ call plug#end()
 
   let g:coc_snippet_next = '<tab>'
   let g:snips_author = 'littleNewton'
-  
