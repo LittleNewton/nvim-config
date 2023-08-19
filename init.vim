@@ -3,10 +3,11 @@
     set list
     set listchars=tab:▸\ ,trail:·
 
-    set number     " 行号
-    set ttyfast    " 滚动更快
-    set lazyredraw " 滚动更快
-    syntax on      " 语法高亮
+    set number              " 显示行号
+    set relativenumber      " 显示相对行号
+    set ttyfast             " 滚动更快
+    set lazyredraw          " 滚动更快
+    syntax on               " 语法高亮
 
     "Vim自动探测fileencodings的顺序列表
     "启动时会按照它所列出的字符编码方式逐一探测即将打开的文件的字符编码方式
