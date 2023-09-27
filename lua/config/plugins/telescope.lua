@@ -17,6 +17,7 @@ M.config = {
 
         dependencies = {
             "nvim-lua/plenary.nvim",
+
             {
                 -- littleNewton: 貌似是用来显示小窗口！
                 "LukasPietzschmann/telescope-tabs",
@@ -26,27 +27,31 @@ M.config = {
                     vim.keymap.set('n', '<c-t>', tstabs.list_tabs, {})
                 end
             }, 
+
             {
                 'nvim-telescope/telescope-fzf-native.nvim',
                 build = 'make'
             },
+
             -- "nvim-telescope/telescope-ui-select.nvim",
+
             'stevearc/dressing.nvim',
+
             'dimaportenko/telescope-simulators.nvim'
         },
 
         config = function()
             local builtin = require('telescope.builtin')
             -- littleNewton: 关闭搜索快捷键
-            vim.keymap.set('n', '<c-f>',        function() builtin.grep_string({ search = "" }) end,    m)
             vim.keymap.set('n', '<c-_>',        builtin.current_buffer_fuzzy_find,                      m)
+            vim.keymap.set('n', '<c-f>',        function() builtin.grep_string({ search = "" }) end,    m)
             vim.keymap.set('n', '<c-h>',        builtin.oldfiles,                                       m)
             vim.keymap.set('n', '<c-p>',        builtin.find_files,                                     m)
             vim.keymap.set('n', '<c-w>',        builtin.buffers,                                        m)
             vim.keymap.set('n', '<leader>d',    builtin.diagnostics,                                    m)
             vim.keymap.set('n', '<leader>rs',   builtin.resume,                                         m)
             vim.keymap.set('n', 'z=',           builtin.spell_suggest,                                  m)
-            vim.keymap.set("n", "tl",           builtin.commands,                                       m)  -- littleNewton: 打开 TeleScope
+            vim.keymap.set("n", 'tl',           builtin.commands,                                       m)  -- littleNewton: 打开 TeleScope
 
             -- vim.keymap.set('n', 'gd', builtin.lsp_definitions, m)
             -- vim.keymap.set('n', '<c-t>', builtin.lsp_document_symbols, {})
@@ -121,7 +126,7 @@ M.config = {
             ts.load_extension('telescope-tabs')
             ts.load_extension('fzf')
             ts.load_extension('simulators')
-            ts.load_extension("command_center")
+            ts.load_extension("commander")
 
             require("simulators").setup({
                 android_emulator = false,
@@ -137,12 +142,12 @@ M.config = {
         end
     },
     {
-        "FeiyouG/command_center.nvim",
+        "FeiyouG/commander.nvim",
         dependencies = "nvim-telescope/telescope.nvim",
         config = function()
-            local command_center = require("command_center")
-            vim.keymap.set('n', '<c-q>', ":Telescope command_center<CR>", m)
-            command_center.add({{
+            local commander = require("commander")
+            vim.keymap.set('n', '<c-q>', ":Telescope commander<CR>", m)
+            commander.add({{
                 desc = "Run Simulator",
                 cmd = "<CMD>Telescope simulators run<CR>"
             }, {
