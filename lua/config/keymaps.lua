@@ -6,9 +6,10 @@
 
 vim.g.mapleader = " "
 
-local mode_nv = { "n", "v" }
-local mode_v  = { "v" }
-local mode_i  = { "i" }
+local mode_nv  = { "n", "v" }
+local mode_v   = { "v" }
+local mode_i   = { "i" }
+local mode_vi = { "v", "i" }
 
 local nmappings = {
     { from = "S",             to = ":w<CR>" },
@@ -20,6 +21,8 @@ local nmappings = {
     -- Movement
     { from = "J",             to = "5j",                                                                  mode = mode_nv },
     { from = "K",             to = "5k",                                                                  mode = mode_nv },
+		{ from = "<up>",          to = "<C-o>gk",                                                             mode = mode_vi },
+		{ from = "<down>",        to = "<C-o>gj",                                                             mode = mode_vi },
 
     -- Useful actions
     { from = ",.",            to = "%",                                                                   mode = mode_nv },
