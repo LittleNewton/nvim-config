@@ -14,3 +14,37 @@ snippet note "Note of Hexo Butterfly"
 ${2:content}
 {% endnote %}
 endsnippet
+
+snippet head "Head of Hexo Blogs"
+title: ${1:title}
+author: Peng Liu
+cover: /images/${2:cover}/cover.png
+date: `date +"%Y-%m-%d %H:%M:%S"`
+tags:
+	- ${3:tag}
+categories:
+	- ${4:分类}
+---
+
+endsnippet
+
+snippet xh "Hexo 坑边闲话"
+> **坑边闲话**：${1:闲话}
+endsnippet
+
+snippet tp "Hexo 图片"
+![图：${1:图片描述}](/images/`!p import os
+base_name, _ = os.path.splitext(snip.fn)
+snip.rv = base_name`/${2:图片名称})
+
+endsnippet
+
+
+snippet jc "Hexo 加粗"
+**加粗内容**
+endsnippet
+
+
+snippet btn "Hexo Butterfly 按钮"
+{% btn ${1:URL},${2:显示文本}, far fa-hand-point-right, green larger %}
+endsnippet
