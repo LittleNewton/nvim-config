@@ -1,4 +1,4 @@
-setlocal shiftwidth=2 softtabstop=2 expandtab smarttab
+setlocal shiftwidth=4 softtabstop=4 expandtab smarttab
 "autocmd Filetype markdown map <leader>w yiWi[<esc>Ea](<esc>pa)
 inoremap <buffer> ,f <Esc>/<++><CR>:nohlsearch<CR>"_c4l
 inoremap <buffer> <c-e> <Esc>/<++><CR>:nohlsearch<CR>"_c4l
