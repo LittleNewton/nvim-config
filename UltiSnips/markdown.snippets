@@ -18,12 +18,14 @@ endsnippet
 snippet head "Head of Hexo Blogs"
 title: ${1:title}
 author: Peng Liu
-cover: /images/${2:cover}/cover.png
+cover: /images/`!p import os
+base_name, _ = os.path.splitext(snip.fn)
+snip.rv = base_name`/cover.png
 date: `date +"%Y-%m-%d %H:%M:%S"`
 tags:
-	- ${3:tag}
+	- ${2:tag}
 categories:
-	- ${4:分类}
+	- ${3:分类}
 ---
 
 endsnippet
