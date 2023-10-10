@@ -30,9 +30,9 @@ return {
     {
         "pechorin/any-jump.vim",
         config = function()
-            -- 把 j 变为 n
-            vim.keymap.set("n", "n", ":AnyJump<CR>", { noremap = true })
-            vim.keymap.set("x", "n", ":AnyJumpVisual<CR>", { noremap = true })
+            -- littleNewton: 把 j 变为 n
+            vim.keymap.set("n", "<leader>j", ":AnyJump<CR>", { noremap = true })
+            vim.keymap.set("x", "<leader>j", ":AnyJumpVisual<CR>", { noremap = true })
             vim.g.any_jump_disable_default_keybindings = true
             vim.g.any_jump_window_width_ratio = 0.9
             vim.g.any_jump_window_height_ratio = 0.9
