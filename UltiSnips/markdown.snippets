@@ -1,19 +1,9 @@
-snippet th "Table Heading"
-| ${1:Key} | ${2:Value} |
-|-|-|
-${0}
-endsnippet
-
-snippet tr "Table Row"
-| ${1:Term} | ${2:Definition} |
-${0}
-endsnippet
-
 snippet note "Note of Hexo Butterfly"
 {% note ${1:type} no-icon %}
 ${2:content}
 {% endnote %}
 endsnippet
+
 
 snippet head "Head of Hexo Blogs"
 title: ${1:title}
@@ -23,16 +13,14 @@ base_name, _ = os.path.splitext(snip.fn)
 snip.rv = base_name`/cover.png
 date: `date +"%Y-%m-%d %H:%M:%S"`
 tags:
-	- ${2:tag}
+    - ${2:tag}
 categories:
-	- ${3:分类}
+    - ${3:分类}
 ---
+> **坑边闲话**：${4:闲话}
 
 endsnippet
 
-snippet xh "Hexo 坑边闲话"
-> **坑边闲话**：${1:闲话}
-endsnippet
 
 snippet tp "Hexo 图片"
 ![图：${1:图片描述}](/images/`!p import os
@@ -42,11 +30,11 @@ snip.rv = base_name`/${2:图片名称})
 endsnippet
 
 
-snippet jc "Hexo 加粗"
-**加粗内容**
+snippet btn "Hexo Butterfly 按钮"
+{% btn ${1:URL},${2:显示文本}, far fa-hand-point-right, green larger %}
 endsnippet
 
 
-snippet btn "Hexo Butterfly 按钮"
-{% btn ${1:URL},${2:显示文本}, far fa-hand-point-right, green larger %}
+snippet aj "Markdown 键盘按键" i
+<kbd>${1:key}</kbd>
 endsnippet
