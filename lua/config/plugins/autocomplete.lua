@@ -123,6 +123,7 @@ M.configfunc = function()
         sources = cmp.config.sources({
             { name = "nvim_lsp" },
             { name = "buffer" },
+            { name = "ultisnips" },
         }, {
             { name = "path" },
             { name = "nvim_lua" },
