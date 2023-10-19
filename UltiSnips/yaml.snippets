@@ -1,0 +1,22 @@
+snippet mb "模板" b
+version: ${1:'3.7'}
+services:
+	${2:app_name}:
+		image: ${3:app_image}
+		container_name: ${4:app_name}
+		hostname: ${5:app_name}
+		restart: unless-stopped
+		volumes:
+			- /mnt/Intel_750_RAID-Z1/app_data/${6:data}:/${7:data}
+		environment:
+			- ${8:env}
+		networks:
+			- reverse_proxy
+
+
+networks:
+	reverse_proxy:
+		external:
+			name: reverse_proxy
+endsnippet
+
