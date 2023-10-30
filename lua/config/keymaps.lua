@@ -7,28 +7,28 @@
 vim.g.mapleader = " "
 
 local mode_nv  = { "n", "v" }
-local mode_v   = { "v" }
-local mode_i   = { "i" }
-local mode_vi = { "v", "i" }
+local mode_v   = { "v"      }
+local mode_i   = { "i"      }
+local mode_vi  = { "v", "i" }
 
 local nmappings = {
     { from = "S",             to = ":w<CR>" },
     { from = "Q",             to = ":q<CR>" },
-    { from = ";",             to = ":",                                                                   mode = mode_nv },
-    { from = "Y",             to = "\"+y",                                                                mode = mode_v },
-    { from = "`",             to = "~",                                                                   mode = mode_nv },
+    { from = ";",             to = ":",                                 mode = mode_nv },
+    { from = "Y",             to = "\"+y",                              mode = mode_v },
+    { from = "`",             to = "~",                                 mode = mode_nv },
 
     -- Movement
-    { from = "J",             to = "5j",                                                                  mode = mode_nv },
-    { from = "K",             to = "5k",                                                                  mode = mode_nv },
-		{ from = "<up>",          to = "<C-o>gk",                                                             mode = mode_vi },
-		{ from = "<down>",        to = "<C-o>gj",                                                             mode = mode_vi },
+    { from = "J",             to = "5j",                                mode = mode_nv },
+    { from = "K",             to = "5k",                                mode = mode_nv },
+    { from = "<up>",          to = "<C-o>gk",                           mode = mode_vi },
+    { from = "<down>",        to = "<C-o>gj",                           mode = mode_vi },
 
     -- Useful actions
-    { from = ",.",            to = "%",                                                                   mode = mode_nv },
-    { from = "<c-y>",         to = "<ESC>A {}<ESC>i<CR><ESC>ko",                                          mode = mode_i  },
-    { from = "\\v",           to = "v$h", },
-    { from = "<c-a>",         to = "<ESC>A",                                                              mode = mode_i  },
+    { from = ",.",            to = "%",                                 mode = mode_nv },
+    { from = "<c-y>",         to = "<ESC>A {}<ESC>i<CR><ESC>ko",        mode = mode_i  },
+    { from = "\\v",           to = "v$h",                                              },
+    { from = "<c-a>",         to = "<ESC>A",                            mode = mode_i  },
 
     -- Window & splits
     { from = "<leader>w",     to = "<C-w>w", },
@@ -36,7 +36,6 @@ local nmappings = {
     { from = "s",             to = "<nop>", },
     { from = "sk",            to = ":set nosplitbelow<CR>:split<CR>:set splitbelow<CR>", },
     { from = "sj",            to = ":set splitbelow<CR>:split<CR>", },
-    { from = "sh",            to = ":set nosplitright<CR>:vsplit<CR>:set splitright<CR>", },
     { from = "sl",            to = ":set splitright<CR>:vsplit<CR>", },
     { from = "<up>",          to = ":res +5<CR>", },
     { from = "<down>",        to = ":res -5<CR>", },
