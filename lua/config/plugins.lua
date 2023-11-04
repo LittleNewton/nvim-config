@@ -45,7 +45,6 @@ require("lazy").setup({
     require("config.plugins.editor"),
     require("config.plugins.flutter"),
     require("config.plugins.ft"),
-    require("config.plugins.fun"),
     require("config.plugins.fzf"),
     require("config.plugins.git"),
     require("config.plugins.go"),
