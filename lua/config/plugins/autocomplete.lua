@@ -1,7 +1,16 @@
+-- Author: Peng Liu
+-- Email: littlenewton6@gmail.com
+-- Create Date: 05 Nov. 2023
+-- Update Date: 05 Nov. 2023
+
+
+
+-- Detect completion environment.
 local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
+
 local limitStr = function(str)
     if #str > 25 then
         str = string.sub(str, 1, 22) .. "..."
@@ -41,43 +50,43 @@ M.config = {
 local setCompHL = function()
     local fgdark = "#2E3440"
 
-    vim.api.nvim_set_hl(0, "CmpItemAbbrMatch",          { fg = "#82AAFF", bg = "NONE", bold = true })
-    vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy",     { fg = "#82AAFF", bg = "NONE", bold = true })
-    vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated",     { fg = "#7E8294", bg = "NONE", strikethrough = true })
+    vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#82AAFF", bg = "NONE", bold = true })
+    vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = "#82AAFF", bg = "NONE", bold = true })
+    vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#7E8294", bg = "NONE", strikethrough = true })
 
-    vim.api.nvim_set_hl(0, "CmpItemMenu",               { fg = "#808080", bg = "NONE", italic = true })
-    vim.api.nvim_set_hl(0, "CmpItemKindField",          { fg = fgdark, bg = "#B5585F" })
-    vim.api.nvim_set_hl(0, "CmpItemKindProperty",       { fg = fgdark, bg = "#B5585F" })
-    vim.api.nvim_set_hl(0, "CmpItemKindEvent",          { fg = fgdark, bg = "#B5585F" })
+    vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#808080", bg = "NONE", italic = true })
+    vim.api.nvim_set_hl(0, "CmpItemKindField", { fg = fgdark, bg = "#B5585F" })
+    vim.api.nvim_set_hl(0, "CmpItemKindProperty", { fg = fgdark, bg = "#B5585F" })
+    vim.api.nvim_set_hl(0, "CmpItemKindEvent", { fg = fgdark, bg = "#B5585F" })
 
-    vim.api.nvim_set_hl(0, "CmpItemKindText",           { fg = fgdark, bg = "#9FBD73" })
-    vim.api.nvim_set_hl(0, "CmpItemKindEnum",           { fg = fgdark, bg = "#9FBD73" })
-    vim.api.nvim_set_hl(0, "CmpItemKindKeyword",        { fg = fgdark, bg = "#9FBD73" })
+    vim.api.nvim_set_hl(0, "CmpItemKindText", { fg = fgdark, bg = "#9FBD73" })
+    vim.api.nvim_set_hl(0, "CmpItemKindEnum", { fg = fgdark, bg = "#9FBD73" })
+    vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { fg = fgdark, bg = "#9FBD73" })
 
-    vim.api.nvim_set_hl(0, "CmpItemKindConstant",       { fg = fgdark, bg = "#D4BB6C" })
-    vim.api.nvim_set_hl(0, "CmpItemKindConstructor",    { fg = fgdark, bg = "#D4BB6C" })
-    vim.api.nvim_set_hl(0, "CmpItemKindReference",      { fg = fgdark, bg = "#D4BB6C" })
+    vim.api.nvim_set_hl(0, "CmpItemKindConstant", { fg = fgdark, bg = "#D4BB6C" })
+    vim.api.nvim_set_hl(0, "CmpItemKindConstructor", { fg = fgdark, bg = "#D4BB6C" })
+    vim.api.nvim_set_hl(0, "CmpItemKindReference", { fg = fgdark, bg = "#D4BB6C" })
 
-    vim.api.nvim_set_hl(0, "CmpItemKindFunction",       { fg = fgdark, bg = "#A377BF" })
-    vim.api.nvim_set_hl(0, "CmpItemKindStruct",         { fg = fgdark, bg = "#A377BF" })
-    vim.api.nvim_set_hl(0, "CmpItemKindClass",          { fg = fgdark, bg = "#A377BF" })
-    vim.api.nvim_set_hl(0, "CmpItemKindModule",         { fg = fgdark, bg = "#A377BF" })
-    vim.api.nvim_set_hl(0, "CmpItemKindOperator",       { fg = fgdark, bg = "#A377BF" })
+    vim.api.nvim_set_hl(0, "CmpItemKindFunction", { fg = fgdark, bg = "#A377BF" })
+    vim.api.nvim_set_hl(0, "CmpItemKindStruct", { fg = fgdark, bg = "#A377BF" })
+    vim.api.nvim_set_hl(0, "CmpItemKindClass", { fg = fgdark, bg = "#A377BF" })
+    vim.api.nvim_set_hl(0, "CmpItemKindModule", { fg = fgdark, bg = "#A377BF" })
+    vim.api.nvim_set_hl(0, "CmpItemKindOperator", { fg = fgdark, bg = "#A377BF" })
 
-    vim.api.nvim_set_hl(0, "CmpItemKindVariable",       { fg = fgdark, bg = "#7E8294" })
-    vim.api.nvim_set_hl(0, "CmpItemKindFile",           { fg = fgdark, bg = "#7E8294" })
+    vim.api.nvim_set_hl(0, "CmpItemKindVariable", { fg = fgdark, bg = "#7E8294" })
+    vim.api.nvim_set_hl(0, "CmpItemKindFile", { fg = fgdark, bg = "#7E8294" })
 
-    vim.api.nvim_set_hl(0, "CmpItemKindUnit",           { fg = fgdark, bg = "#D4A959" })
-    vim.api.nvim_set_hl(0, "CmpItemKindSnippet",        { fg = fgdark, bg = "#D4A959" })
-    vim.api.nvim_set_hl(0, "CmpItemKindFolder",         { fg = fgdark, bg = "#D4A959" })
+    vim.api.nvim_set_hl(0, "CmpItemKindUnit", { fg = fgdark, bg = "#D4A959" })
+    vim.api.nvim_set_hl(0, "CmpItemKindSnippet", { fg = fgdark, bg = "#D4A959" })
+    vim.api.nvim_set_hl(0, "CmpItemKindFolder", { fg = fgdark, bg = "#D4A959" })
 
-    vim.api.nvim_set_hl(0, "CmpItemKindMethod",         { fg = fgdark, bg = "#6C8ED4" })
-    vim.api.nvim_set_hl(0, "CmpItemKindValue",          { fg = fgdark, bg = "#6C8ED4" })
-    vim.api.nvim_set_hl(0, "CmpItemKindEnumMember",     { fg = fgdark, bg = "#6C8ED4" })
+    vim.api.nvim_set_hl(0, "CmpItemKindMethod", { fg = fgdark, bg = "#6C8ED4" })
+    vim.api.nvim_set_hl(0, "CmpItemKindValue", { fg = fgdark, bg = "#6C8ED4" })
+    vim.api.nvim_set_hl(0, "CmpItemKindEnumMember", { fg = fgdark, bg = "#6C8ED4" })
 
-    vim.api.nvim_set_hl(0, "CmpItemKindInterface",      { fg = fgdark, bg = "#58B5A8" })
-    vim.api.nvim_set_hl(0, "CmpItemKindColor",          { fg = fgdark, bg = "#58B5A8" })
-    vim.api.nvim_set_hl(0, "CmpItemKindTypeParameter",  { fg = fgdark, bg = "#58B5A8" })
+    vim.api.nvim_set_hl(0, "CmpItemKindInterface", { fg = fgdark, bg = "#58B5A8" })
+    vim.api.nvim_set_hl(0, "CmpItemKindColor", { fg = fgdark, bg = "#58B5A8" })
+    vim.api.nvim_set_hl(0, "CmpItemKindTypeParameter", { fg = fgdark, bg = "#58B5A8" })
 end
 
 M.configfunc = function()

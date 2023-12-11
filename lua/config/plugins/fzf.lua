@@ -29,7 +29,7 @@ return {
                     scrollbar = 'float',
                 },
                 fullscreen = true,
-                vertical   = 'down:45%', -- up|down:size
+                vertical   = 'down:45%',  -- up|down:size
                 horizontal = 'right:60%', -- right|left:size
                 hidden     = 'nohidden',
             },
@@ -73,8 +73,8 @@ return {
                     cmd = "man -c %s | col -bx",
                 },
                 builtin = {
-                    syntax         = true,   -- preview syntax highlight?
-                    syntax_limit_l = 0,      -- syntax limit (lines), 0=nolimit
+                    syntax         = true,        -- preview syntax highlight?
+                    syntax_limit_l = 0,           -- syntax limit (lines), 0=nolimit
                     syntax_limit_b = 1024 * 1024, -- syntax limit (bytes), 0=nolimit
                 },
             },

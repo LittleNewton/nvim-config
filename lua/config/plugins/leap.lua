@@ -199,7 +199,7 @@ return {
         },
         keys = {
             -- {
-            --     "<ESC>",
+            --     "<ESC><ESC>",
             --     mode = { "n" },
             --     function()
             --         require("flash").jump()
