@@ -54,6 +54,7 @@ require("lazy").setup({
     require("config.plugins.lspconfig").config,
     require("config.plugins.markdown"),
     require("config.plugins.multi-cursor"),
+    require("config.plugins.nvim-nio"),
     require("config.plugins.notify"),
     require("config.plugins.project"),
     require("config.plugins.scrollbar"),
