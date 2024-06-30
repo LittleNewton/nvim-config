@@ -1,6 +1,6 @@
 -- Author: Peng Liu
 -- Create Date: 25 Sept. 2023
--- Update Date: 26 Sept. 2023
+-- Update Date: 30 Jun.  2024
 
 
 
@@ -10,12 +10,12 @@ return {
         config = function()
             require('gitsigns').setup({
                 signs = {
-                    add          = { hl = 'GitSignsAdd',    text = '▎', numhl = 'GitSignsAddNr',    linehl = 'GitSignsAddLn'    },
-                    change       = { hl = 'GitSignsChange', text = '░', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
-                    delete       = { hl = 'GitSignsDelete', text = '_', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
-                    topdelete    = { hl = 'GitSignsDelete', text = '▔', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
-                    changedelete = { hl = 'GitSignsChange', text = '▒', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
-                    untracked    = { hl = 'GitSignsAdd',    text = '┆', numhl = 'GitSignsAddNr',    linehl = 'GitSignsAddLn'    },
+                    add          = { text = '▎' },
+                    change       = { text = '░' },
+                    delete       = { text = '_' },
+                    topdelete    = { text = '▔' },
+                    changedelete = { text = '▒' },
+                    untracked    = { text = '┆' },
                 },
             })
             vim.keymap.set("n", "<leader>g-", ":Gitsigns prev_hunk<CR>",            { noremap = true, silent = true })
