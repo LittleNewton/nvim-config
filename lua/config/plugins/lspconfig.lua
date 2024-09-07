@@ -56,7 +56,7 @@ M.config = {
             M.lsp = lsp
 
             lsp.ensure_installed({
-                'tsserver',
+                'ts_ls',
                 'eslint',
                 'gopls',
                 'jsonls',
