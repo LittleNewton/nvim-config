@@ -60,6 +60,7 @@ M.config = {
                 'eslint',
                 'gopls',
                 'jsonls',
+                'rust_analyzer',
             })
 
             -- F.configureInlayHints()
