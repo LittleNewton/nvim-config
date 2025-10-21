@@ -8,12 +8,12 @@ local M = {}
 local F = {}
 
 local ensure_servers = {
-    'ts_ls',
-    'eslint',
-    'gopls',
-    'jsonls',
-    'rust_analyzer',
-    'lua_ls',
+    'eslint',        -- eslint-lsp
+    'gopls',         -- Go
+    'jsonls',        -- JSON
+    'lua_ls',        -- Lua
+    'rust_analyzer', -- Rust
+    'ts_ls',         -- typescript-language-server
 }
 
 local server_overrides = {
