@@ -1,12 +1,32 @@
 -- Author: Peng Liu
 -- Create Date: 27 Sept. 2023
--- Update Date: 27 Sept. 2023
+-- Update Date: 21 Oct.  2025
 
 
 
 local M = {}
-
 local F = {}
+
+local ensure_servers = {
+    'ts_ls',
+    'eslint',
+    'gopls',
+    'jsonls',
+    'rust_analyzer',
+    'lua_ls',
+}
+
+local server_overrides = {
+    lua_ls = require("config.lsp.lua"),
+    jsonls = require("config.lsp.json"),
+}
+
+local format_on_save_filetypes = {
+    dart = true,
+    json = true,
+    go = true,
+    lua = true,
+}
 
 M.config = {
     {
@@ -14,8 +34,7 @@ M.config = {
         cmd = 'CodeActionMenu',
     },
     {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v2.x',
+        'neovim/nvim-lspconfig',
         dependencies = {
             {
                 "folke/trouble.nvim",
@@ -28,178 +47,214 @@ M.config = {
                     },
                 },
             },
-            { 'neovim/nvim-lspconfig' },
-            {
-                'williamboman/mason.nvim',
-                build = function()
-                    vim.cmd([[MasonInstall]])
-                end,
-            },
+            { 'williamboman/mason.nvim', build = function() vim.cmd([[MasonInstall]]) end },
             { 'williamboman/mason-lspconfig.nvim' },
             { 'hrsh7th/cmp-nvim-lsp' },
             {
                 'j-hui/fidget.nvim',
                 tag = "legacy"
             },
-            "folke/neodev.nvim",
-            "ray-x/lsp_signature.nvim",
-            "ldelossa/nvim-dap-projects",
+            'folke/neodev.nvim',
+            'ray-x/lsp_signature.nvim',
+            'ldelossa/nvim-dap-projects',
             {
                 "lvimuser/lsp-inlayhints.nvim",
                 branch = "anticonceal",
             },
-            -- "mjlbach/lsp_signature.nvim",
         },
-
         config = function()
-            local lsp = require('lsp-zero').preset({})
-            M.lsp = lsp
-
-            lsp.ensure_installed({
-                'ts_ls',
-                'eslint',
-                'gopls',
-                'jsonls',
-                'rust_analyzer',
-            })
-
-            -- F.configureInlayHints()
-
-            lsp.on_attach(function(client, bufnr)
-                lsp.default_keymaps({ buffer = bufnr })
-                client.server_capabilities.semanticTokensProvider = nil
-                require("config.plugins.autocomplete").configfunc()
-                -- require("lsp_signature").on_attach(F.signature_config, bufnr)
-                -- require("lsp-inlayhints").on_attach(client, bufnr)
-                -- vim.api.nvim_create_augroup("lsp_augroup", { clear = true })
-                -- vim.api.nvim_create_autocmd("InsertEnter", {
-                --     buffer = bufnr,
-                --     callback = function() vim.lsp.inlay_hint(bufnr, false) end,
-                --     group = "lsp_augroup",
-                -- })
-                -- vim.lsp.inlay_hint(bufnr, true)
-                -- vim.api.nvim_create_autocmd("InsertLeave", {
-                --     buffer = bufnr,
-                --     callback = function() vim.lsp.inlay_hint(bufnr, true) end,
-                --     group = "lsp_augroup",
-                -- })
-                -- vim.cmd('highlight! link LspInlayHint Comment')
-                vim.diagnostic.config({
-                    severity_sort = true,
-                    underline = true,
-                    signs = true,
-                    virtual_text = false,
-                    update_in_insert = false,
-                    float = true,
-                })
-            end)
-
-            lsp.set_sign_icons({
-                error = '✘',
-                warn = '▲',
-                hint = '⚑',
-                info = '»'
-            })
-
-            lsp.set_server_config({
-                on_init = function(client)
-                    client.server_capabilities.semanticTokensProvider = nil
-                end,
-            })
-
-            lsp.format_on_save({
-                format_opts = {
-                    -- async = false,
-                    -- timeout_ms = 10000,
-                },
-            })
-
-
-            local lspconfig = require('lspconfig')
-
-            require("config.lsp.lua").setup(lspconfig, lsp)
-            require("config.lsp.json").setup(lspconfig, lsp)
-            require("config.lsp.flutter").setup(lsp)
-            -- require("config.lsp.html").setup(lspconfig, lsp)
-
-            lsp.setup()
-            require("fidget").setup({})
-
-            local lsp_defaults = lspconfig.util.default_config
-            lsp_defaults.capabilities = vim.tbl_deep_extend(
-                'force',
-                lsp_defaults.capabilities,
-                require('cmp_nvim_lsp').default_capabilities()
-            )
-
-            require('nvim-dap-projects').search_project_config()
-
-            F.configureDocAndSignature()
-            F.configureKeybinds()
-
-            local format_on_save_filetypes = {
-                dart = true,
-                json = true,
-                go = true,
-                lua = true,
-            }
-
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                pattern = "*",
-                callback = function()
-                    if format_on_save_filetypes[vim.bo.filetype] then
-                        local lineno = vim.api.nvim_win_get_cursor(0)
-                        vim.lsp.buf.format({ async = false })
-                        vim.api.nvim_win_set_cursor(0, lineno)
-                    end
-                end,
-            })
+            F.setup_lsp()
         end
     },
 }
 
-F.configureInlayHints = function()
-    require("lsp-inlayhints").setup({
-        inlay_hints = {
-            parameter_hints = {
-                show = true,
-                prefix = "<- ",
-                separator = ", ",
-                remove_colon_start = false,
-                remove_colon_end = true,
-            },
-            type_hints = {
-                -- type and other hints
-                show = true,
-                prefix = "",
-                separator = ", ",
-                remove_colon_start = false,
-                remove_colon_end = false,
-            },
-            only_current_line = false,
-            -- separator between types and parameter hints. Note that type hints are
-            -- shown before parameter
-            labels_separator = "  ",
-            -- whether to align to the length of the longest line in the file
-            max_len_align = false,
-            -- padding from the left if max_len_align is true
-            max_len_align_padding = 1,
-            highlight = "Comment",
-        },
+function F.setup_lsp()
+    F.setup_mason()
+    F.setup_diagnostics()
+    F.set_sign_icons()
+    F.configure_doc_and_signature()
+    F.configure_keybinds()
+    F.setup_format_on_save()
+
+    local base_opts = F.base_options()
+    F.setup_servers(base_opts)
+    F.setup_flutter(base_opts)
+    F.setup_auxiliary_tools()
+end
+
+function F.setup_mason()
+    local mason_ok, mason = pcall(require, "mason")
+    if mason_ok then
+        mason.setup()
+    end
+
+    local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+    if mason_lspconfig_ok then
+        mason_lspconfig.setup({
+            ensure_installed = ensure_servers,
+            automatic_enable = false,
+        })
+    end
+end
+
+function F.base_options()
+    local ok, cmp = pcall(require, 'cmp_nvim_lsp')
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    if ok then
+        capabilities = cmp.default_capabilities(capabilities)
+    end
+
+    return {
+        capabilities = capabilities,
+        on_attach = F.on_attach,
+        on_init = F.on_init,
+    }
+end
+
+function F.setup_servers(base_opts)
+    for name, builder in pairs(server_overrides) do
+        local overrides = builder()
+        local config = F.merge_options(base_opts, overrides)
+        F.register_server(name, config)
+    end
+
+    for _, name in ipairs(ensure_servers) do
+        if not server_overrides[name] then
+            local config = F.merge_options(base_opts, {})
+            F.register_server(name, config)
+        end
+    end
+end
+
+function F.setup_flutter(base_opts)
+    local ok, configure_flutter = pcall(require, "config.lsp.flutter")
+    if ok then
+        configure_flutter(base_opts)
+    end
+end
+
+function F.register_server(name, config)
+    vim.lsp.config(name, config)
+    vim.lsp.enable(name)
+end
+
+function F.merge_options(base_opts, overrides)
+    local overrides_copy = vim.deepcopy(overrides or {})
+    local custom_on_attach = overrides_copy.on_attach
+    overrides_copy.on_attach = nil
+    local custom_on_init = overrides_copy.on_init
+    overrides_copy.on_init = nil
+
+    local merged = vim.tbl_deep_extend('force', {}, base_opts, overrides_copy)
+
+    local base_on_attach = base_opts.on_attach
+    if custom_on_attach then
+        merged.on_attach = function(client, bufnr)
+            if base_on_attach then
+                base_on_attach(client, bufnr)
+            end
+            custom_on_attach(client, bufnr)
+        end
+    end
+
+    local base_on_init = base_opts.on_init
+    if custom_on_init then
+        merged.on_init = function(client, ...)
+            if base_on_init then
+                base_on_init(client, ...)
+            end
+            return custom_on_init(client, ...)
+        end
+    end
+
+    return merged
+end
+
+function F.disable_semantic_tokens(client)
+    if client and client.server_capabilities then
+        client.server_capabilities.semanticTokensProvider = nil
+    end
+end
+
+function F.on_init(client)
+    F.disable_semantic_tokens(client)
+end
+
+function F.on_attach(client, bufnr)
+    F.disable_semantic_tokens(client)
+
+    local ok, autocomplete = pcall(require, "config.plugins.autocomplete")
+    if ok and type(autocomplete.configfunc) == "function" then
+        autocomplete.configfunc()
+    end
+end
+
+function F.setup_diagnostics()
+    vim.diagnostic.config({
+        severity_sort = true,
+        underline = true,
+        signs = true,
+        virtual_text = false,
+        update_in_insert = false,
+        float = true,
     })
 end
 
-F.configureDocAndSignature = function()
+function F.set_sign_icons()
+    local signs = {
+        { name = "DiagnosticSignError", text = "✘" },
+        { name = "DiagnosticSignWarn", text = "▲" },
+        { name = "DiagnosticSignHint", text = "⚑" },
+        { name = "DiagnosticSignInfo", text = "»" },
+    }
+
+    for _, sign in ipairs(signs) do
+        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+    end
+end
+
+function F.setup_format_on_save()
+    local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = true })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+        group = group,
+        pattern = "*",
+        callback = function()
+            local ft = vim.bo.filetype
+            if format_on_save_filetypes[ft] then
+                local cursor = vim.api.nvim_win_get_cursor(0)
+                vim.lsp.buf.format({ async = false })
+                vim.api.nvim_win_set_cursor(0, cursor)
+            end
+        end,
+    })
+end
+
+function F.setup_auxiliary_tools()
+    local ok_fidget, fidget = pcall(require, "fidget")
+    if ok_fidget then
+        fidget.setup({})
+    end
+
+    local ok_projects, dap_projects = pcall(require, "nvim-dap-projects")
+    if ok_projects then
+        dap_projects.search_project_config()
+    end
+end
+
+function F.configure_doc_and_signature()
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help, {
+        vim.lsp.handlers.signature_help,
+        {
             silent = true,
             focusable = false,
             border = "rounded",
         }
     )
+
     local group = vim.api.nvim_create_augroup("lsp_diagnostics_hold", { clear = true })
     vim.api.nvim_create_autocmd({ "CursorHold" }, {
         pattern = "*",
+        group = group,
         callback = function()
             vim.diagnostic.open_float(0, {
                 scope = "cursor",
@@ -213,28 +268,10 @@ F.configureDocAndSignature = function()
                 },
             })
         end,
-        group = group,
     })
-    -- vim.api.nvim_create_autocmd({ "CursorHoldI" }, {
-    --     pattern = "*",
-    --     command = "silent! lua vim.lsp.buf.signature_help()",
-    --     group = group,
-    -- })
-
-    -- F.signature_config = {
-    --     bind = false,
-    --     floating_window = true,
-    --     hint_inline = function() return false end,
-    --     handler_opts = {
-    --         border = "rounded"
-    --     }
-    -- }
-    -- local lspsignature = require('lsp_signature')
-    -- lspsignature.setup(F.signature_config)
 end
 
-
-F.configureKeybinds = function()
+function F.configure_keybinds()
     vim.api.nvim_create_autocmd('LspAttach', {
         desc = 'LSP actions',
         callback = function(event)
@@ -248,11 +285,8 @@ F.configureKeybinds = function()
             vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
             vim.keymap.set('i', '<c-f>', vim.lsp.buf.signature_help, opts)
             vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-            -- vim.keymap.set({ 'n', 'x' }, '<leader>f', function() vim.lsp.buf.format({ async = true }) end, opts)
             vim.keymap.set('n', '<leader>aw', vim.lsp.buf.code_action, opts)
             vim.keymap.set('n', "<leader>,", vim.lsp.buf.code_action, opts)
-            -- vim.keymap.set('x', '<leader>aw', vim.lsp.buf.range_code_action, opts)
-            -- vim.keymap.set('x', "<leader>,", vim.lsp.buf.range_code_action, opts)
             vim.keymap.set('n', '<leader>t', ':Trouble<cr>', opts)
             vim.keymap.set('n', '<leader>-', vim.diagnostic.goto_prev, opts)
             vim.keymap.set('n', '<leader>=', vim.diagnostic.goto_next, opts)

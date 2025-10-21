@@ -1,29 +1,25 @@
-return {
-	setup = function(lspconfig, lsp)
-		require("neodev").setup({
-			lspconfig = true,
-			override = function()
-			end
-		})
-		lspconfig.lua_ls.setup({
-			on_attach = function()
-			end,
-			settings = {
-				Lua = {
-					diagnostics = {
-						globals = {
-							'vim',
-							'require'
-						},
-					},
-					workspace = {
-						checkThirdParty = false,
-					},
-					completion = {
-						callSnippet = "Replace"
-					}
-				}
-			}
-		})
-	end
-}
+return function()
+    local ok, neodev = pcall(require, "neodev")
+    if ok then
+        neodev.setup({})
+    end
+
+    return {
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = {
+                        'vim',
+                        'require',
+                    },
+                },
+                workspace = {
+                    checkThirdParty = false,
+                },
+                completion = {
+                    callSnippet = "Replace",
+                },
+            },
+        },
+    }
+end
