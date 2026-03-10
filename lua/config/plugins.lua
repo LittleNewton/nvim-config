@@ -5,7 +5,7 @@
 
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
         "git",
         "clone",
@@ -36,7 +36,6 @@ vim.keymap.set("n", "<leader>pl", ":Lazy<CR>", { noremap = true })
 
 require("lazy").setup({
     { "dstein64/vim-startuptime" },
-    { "weirongxu/coc-explorer" },
     require("config.plugins.autocomplete").config,
     require("config.plugins.colorscheme"),
     require("config.plugins.comment"),

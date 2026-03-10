@@ -50,17 +50,13 @@ M.config = {
             { 'williamboman/mason.nvim', build = function() vim.cmd([[MasonInstall]]) end },
             { 'williamboman/mason-lspconfig.nvim' },
             { 'hrsh7th/cmp-nvim-lsp' },
+            { 'j-hui/fidget.nvim' },
             {
-                'j-hui/fidget.nvim',
-                tag = "legacy"
+                'folke/lazydev.nvim',
+                ft = 'lua',
+                opts = {},
             },
-            'folke/neodev.nvim',
-            'ray-x/lsp_signature.nvim',
             'ldelossa/nvim-dap-projects',
-            {
-                "lvimuser/lsp-inlayhints.nvim",
-                branch = "anticonceal",
-            },
         },
         config = function()
             F.setup_lsp()
@@ -71,7 +67,6 @@ M.config = {
 function F.setup_lsp()
     F.setup_mason()
     F.setup_diagnostics()
-    F.set_sign_icons()
     F.configure_doc_and_signature()
     F.configure_keybinds()
     F.setup_format_on_save()
@@ -183,6 +178,10 @@ end
 function F.on_attach(client, bufnr)
     F.disable_semantic_tokens(client)
 
+    if client.supports_method("textDocument/inlayHint") then
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    end
+
     local ok, autocomplete = pcall(require, "config.plugins.autocomplete")
     if ok and type(autocomplete.configfunc) == "function" then
         autocomplete.configfunc()
@@ -193,24 +192,18 @@ function F.setup_diagnostics()
     vim.diagnostic.config({
         severity_sort = true,
         underline = true,
-        signs = true,
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = "✘",
+                [vim.diagnostic.severity.WARN]  = "▲",
+                [vim.diagnostic.severity.HINT]  = "⚑",
+                [vim.diagnostic.severity.INFO]  = "»",
+            },
+        },
         virtual_text = false,
         update_in_insert = false,
         float = true,
     })
-end
-
-function F.set_sign_icons()
-    local signs = {
-        { name = "DiagnosticSignError", text = "✘" },
-        { name = "DiagnosticSignWarn", text = "▲" },
-        { name = "DiagnosticSignHint", text = "⚑" },
-        { name = "DiagnosticSignInfo", text = "»" },
-    }
-
-    for _, sign in ipairs(signs) do
-        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-    end
 end
 
 function F.setup_format_on_save()

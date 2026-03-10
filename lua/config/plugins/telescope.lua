@@ -126,7 +126,6 @@ M.config = {
             ts.load_extension('telescope-tabs')
             ts.load_extension('fzf')
             ts.load_extension('simulators')
-            ts.load_extension("commander")
 
             require("simulators").setup({
                 android_emulator = false,
@@ -142,18 +141,19 @@ M.config = {
         end
     },
     {
-        "FeiyouG/commander.nvim",
-        dependencies = "nvim-telescope/telescope.nvim",
+        "folke/which-key.nvim",
+        event = "VeryLazy",
         config = function()
-            local commander = require("commander")
-            vim.keymap.set('n', '<c-q>', ":Telescope commander<CR>", m)
-            commander.add({{
-                desc = "Run Simulator",
-                cmd = "<CMD>Telescope simulators run<CR>"
-            }, {
-                desc = "Git diff",
-                cmd = "<CMD>Telescope git_status<CR>"
-            }})
+            local wk = require("which-key")
+            wk.setup({})
+            -- <c-q> now opens telescope command list (replaces commander)
+            vim.keymap.set('n', '<c-q>', ":Telescope commands<CR>", m)
+            wk.add({
+                { "<leader>'", group = "DAP" },
+                { "<leader>h", group = "Hover" },
+                { "<leader>r", group = "Rename/Resume" },
+                { "<leader>a", group = "Code Action" },
+            })
         end
     }
 }

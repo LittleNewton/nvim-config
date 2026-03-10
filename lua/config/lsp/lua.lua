@@ -1,9 +1,4 @@
 return function()
-    local ok, neodev = pcall(require, "neodev")
-    if ok then
-        neodev.setup({})
-    end
-
     return {
         settings = {
             Lua = {

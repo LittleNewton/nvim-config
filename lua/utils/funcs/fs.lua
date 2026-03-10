@@ -25,7 +25,7 @@ function M.proj_dir(fpath, patterns)
     path = dirpath,
     upward = true,
   })[1]
-  if root and vim.loop.fs_stat(root) then
+  if root and vim.uv.fs_stat(root) then
     return vim.fs.dirname(root)
   end
 end
