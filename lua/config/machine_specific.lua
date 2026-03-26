@@ -2,7 +2,7 @@
 
 vim.g.snips_author = 'Peng Liu'
 
-vim.g.python3_host_prog = os.getenv("HOME") .. '/bin/miniconda3/bin/python3'
+vim.g.python3_host_prog = os.getenv("HOME") .. '/.local/share/micromamba/envs/neovim/bin/python3'
 
 vim.g.mkdp_browser = 'chromium'
 vim.g.mkdp_browserfunc = 'open '
