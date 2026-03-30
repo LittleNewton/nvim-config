@@ -235,14 +235,14 @@ function F.setup_auxiliary_tools()
 end
 
 function F.configure_doc_and_signature()
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        {
+    vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
+        config = vim.tbl_extend("force", config or {}, {
             silent = true,
             focusable = false,
             border = "rounded",
-        }
-    )
+        })
+        return vim.lsp.handlers.signature_help(err, result, ctx, config)
+    end
 
     local group = vim.api.nvim_create_augroup("lsp_diagnostics_hold", { clear = true })
     vim.api.nvim_create_autocmd({ "CursorHold" }, {
