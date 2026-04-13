@@ -78,7 +78,15 @@ end
 function F.setup_mason()
     local mason_ok, mason = pcall(require, "mason")
     if mason_ok then
-        mason.setup()
+        mason.setup({
+            ui = {
+                icons = {
+                    package_installed = "✓",
+                    package_pending = "➜",
+                    package_uninstalled = "✗",
+                },
+            },
+        })
     end
 
     local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
