@@ -1,15 +1,17 @@
-vim.cmd([[
-fun! s:MakePair()
-    let line = getline('.')
-    let len = strlen(line)
-    if line[len - 1] == ";" || line[len - 1] == ","
-        normal! lx$P
+local function make_pair()
+    local line = vim.api.nvim_get_current_line()
+    local last_char = line:sub(-1)
+    if last_char == ";" or last_char == "," then
+        vim.cmd.normal({ "lx$P", bang = true })
     else
-        normal! lx$p
-    endif
-endfun
-inoremap <c-u> <ESC>:call <SID>MakePair()<CR>
-]])
+        vim.cmd.normal({ "lx$p", bang = true })
+    end
+end
+
+vim.keymap.set("i", "<c-u>", function()
+    vim.cmd.stopinsert()
+    make_pair()
+end, { noremap = true })
 
 return {
     {
@@ -22,7 +24,7 @@ return {
                     'regex',
                 },
             })
-            vim.cmd("hi IlluminatedWordText guibg=#393E4D gui=none")
+            vim.api.nvim_set_hl(0, "IlluminatedWordText", { bg = "#393E4D" })
         end
     },
     {
@@ -30,13 +32,6 @@ return {
         lazy = false,
         ft = { "markdown", "txt" },
     },
-    -- {
-    --     "psliwka/vim-smoothie",
-    --     init = function()
-    --         vim.cmd([[nnoremap <unique> <C-e> <cmd>call smoothie#do("\<C-D>") <CR>]])
-    --         vim.cmd([[nnoremap <unique> <C-u> <cmd>call smoothie#do("\<C-U>") <CR>]])
-    --     end
-    -- },
     {
         "NvChad/nvim-colorizer.lua",
         opts = {
@@ -51,15 +46,11 @@ return {
                 hsl_fn = false,       -- CSS hsl() and hsla() functions
                 css = false,          -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
                 css_fn = false,       -- Enable all CSS *functions*: rgb_fn, hsl_fn
-                -- Available modes for `mode`: foreground, background,  virtualtext
-                mode = "virtualtext", -- Set the display mode.
-                -- Available methods are false / true / "normal" / "lsp" / "both"
-                -- True is same as normal
+                mode = "virtualtext",
                 tailwind = true,
                 sass = { enable = false },
                 virtualtext = "■",
             },
-            -- all the sub-options of filetypes apply to buftypes
             buftypes = {},
         }
     },
@@ -69,11 +60,8 @@ return {
         "fedepujol/move.nvim",
         config = function()
             local opts = { noremap = true, silent = true }
-            -- Normal-mode commands
             vim.keymap.set('n', '<c-y>', ':MoveLine(1)<CR>', opts)
             vim.keymap.set('n', '<c-l>', ':MoveLine(-1)<CR>', opts)
-
-            -- Visual-mode commands
             vim.keymap.set('v', '<c-e>', ':MoveBlock(1)<CR>', opts)
             vim.keymap.set('v', '<c-u>', ':MoveBlock(-1)<CR>', opts)
         end
