@@ -29,6 +29,9 @@ M.config = {
             end
         },
     },
+    config = function()
+        require("config.plugins.autocomplete").configfunc()
+    end,
 }
 
 local setCompHL = function()

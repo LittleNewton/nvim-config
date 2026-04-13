@@ -172,11 +172,6 @@ function F.on_attach(client, bufnr)
     if client.supports_method("textDocument/inlayHint") then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
     end
-
-    local ok, autocomplete = pcall(require, "config.plugins.autocomplete")
-    if ok and type(autocomplete.configfunc) == "function" then
-        autocomplete.configfunc()
-    end
 end
 
 function F.setup_diagnostics()
