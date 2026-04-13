@@ -43,7 +43,6 @@ require("lazy").setup({
     require("config.plugins.debugger"),
     require("config.plugins.editor"),
     require("config.plugins.ft"),
-    require("config.plugins.fzf"),
     require("config.plugins.git"),
     require("config.plugins.go"),
     require("config.plugins.indent"),

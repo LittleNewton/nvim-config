@@ -45,6 +45,7 @@ M.config = {
             -- littleNewton: 关闭搜索快捷键
             vim.keymap.set('n', '<c-_>',        builtin.current_buffer_fuzzy_find,                      m)
             vim.keymap.set('n', '<c-f>',        function() builtin.grep_string({ search = "" }) end,    m)
+            vim.keymap.set('x', '<c-f>',        function() builtin.grep_string() end,                   m)
             vim.keymap.set('n', '<c-h>',        builtin.oldfiles,                                       m)
             vim.keymap.set('n', '<c-p>',        builtin.find_files,                                     m)
             vim.keymap.set('n', '<c-w>',        builtin.buffers,                                        m)
