@@ -1,7 +1,4 @@
-vim.o.termguicolors = true
 vim.env.NVIM_TUI_ENABLE_TRUE_COLOR = 1
-
-vim.o.ttyfast = true
 vim.o.autochdir = true
 vim.o.exrc = true
 vim.o.secure = false
@@ -43,22 +40,35 @@ vim.o.colorcolumn = '100'
 vim.o.updatetime = 100
 vim.o.virtualedit = 'block'
 
-vim.cmd([[
-silent !mkdir -p $HOME/.config/nvim/tmp/backup
-silent !mkdir -p $HOME/.config/nvim/tmp/undo
-"silent !mkdir -p $HOME/.config/nvim/tmp/sessions
-set backupdir=$HOME/.config/nvim/tmp/backup,.
-set directory=$HOME/.config/nvim/tmp/backup,.
-if has('persistent_undo')
-    set undofile
-    set undodir=$HOME/.config/nvim/tmp/undo,.
-endif
-]])
+local nvim_dir = vim.fn.stdpath("config")
+vim.fn.mkdir(nvim_dir .. "/tmp/backup", "p")
+vim.fn.mkdir(nvim_dir .. "/tmp/undo", "p")
+vim.o.backupdir = nvim_dir .. "/tmp/backup,."
+vim.o.directory = nvim_dir .. "/tmp/backup,."
+vim.o.undofile = true
+vim.o.undodir = nvim_dir .. "/tmp/undo,."
 
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, { pattern = "*.md", command = "setlocal spell", })
-vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", command = "silent! lcd %:p:h", })
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = "*.md",
+    callback = function() vim.opt_local.spell = true end,
+})
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
+    callback = function()
+        pcall(function() vim.cmd.lcd(vim.fn.expand("%:p:h")) end)
+    end,
+})
 
-vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif]])
+vim.api.nvim_create_autocmd("BufReadPost", {
+    pattern = "*",
+    callback = function()
+        local mark = vim.api.nvim_buf_get_mark(0, '"')
+        local line_count = vim.api.nvim_buf_line_count(0)
+        if mark[1] > 1 and mark[1] <= line_count then
+            vim.api.nvim_win_set_cursor(0, mark)
+        end
+    end,
+})
 
 vim.g.terminal_color_0  = '#000000'
 vim.g.terminal_color_1  = '#FF5555'
@@ -75,17 +85,23 @@ vim.g.terminal_color_11 = '#F4F99D'
 vim.g.terminal_color_12 = '#CAA9FA'
 vim.g.terminal_color_13 = '#FF92D0'
 vim.g.terminal_color_14 = '#9AEDFE'
-vim.cmd([[autocmd TermOpen term://* startinsert]])
-vim.cmd([[
-augroup NVIMRC
-    autocmd!
-    autocmd BufWritePost .vim.lua exec ":so %"
-augroup END
-tnoremap <C-N> <C-\><C-N>
-tnoremap <C-O> <C-\><C-N><C-O>
-]])
 
-vim.cmd([[hi NonText ctermfg=gray guifg=grey10]])
+vim.api.nvim_create_autocmd("TermOpen", {
+    pattern = "term://*",
+    command = "startinsert",
+})
+
+local nvimrc_group = vim.api.nvim_create_augroup("NVIMRC", { clear = true })
+vim.api.nvim_create_autocmd("BufWritePost", {
+    group = nvimrc_group,
+    pattern = ".vim.lua",
+    command = "source %",
+})
+
+vim.keymap.set("t", "<C-N>", [[<C-\><C-N>]], { noremap = true })
+vim.keymap.set("t", "<C-O>", [[<C-\><C-N><C-O>]], { noremap = true })
+
+vim.api.nvim_set_hl(0, "NonText", { ctermfg = 8, fg = "grey10" })
 
 local config_path = vim.fn.stdpath("config")
 local current_config_path = config_path .. "/lua/config/machine_specific.lua"
@@ -101,3 +117,16 @@ if not vim.uv.fs_stat(current_config_path) then
     end
 end
 require("config.machine_specific")
+
+-- Workaround: Neovim 0.12.0 treesitter async parse can pass nil nodes
+-- to get_range(), causing "attempt to call method 'range' (a nil value)".
+-- Remove this after upgrading to a Neovim version that fixes the bug.
+do
+    local orig = vim.treesitter.get_range
+    vim.treesitter.get_range = function(node, source, metadata)
+        if node == nil then
+            return { 0, 0, 0, 0, 0, 0 }
+        end
+        return orig(node, source, metadata)
+    end
+end
