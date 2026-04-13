@@ -1,11 +1,3 @@
--- Author: Peng Liu
--- Email: littlenewton6@gmail.com
--- Create Date: 05 Nov. 2023
--- Update Date: 05 Nov. 2023
-
-
-
--- Detect completion environment.
 local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -22,13 +14,13 @@ local M = {}
 M.config = {
     "hrsh7th/nvim-cmp",
     dependencies = {
-        "SirVer/ultisnips",
+        "L3MON4D3/LuaSnip",
+        "saadparwaiz1/cmp_luasnip",
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-nvim-lua",
         "hrsh7th/cmp-calc",
-        -- "andersevenrud/cmp-tmux",
         {
             "onsails/lspkind.nvim",
             lazy = false,
@@ -36,14 +28,6 @@ M.config = {
                 require("lspkind").init()
             end
         },
-        {
-            "quangnguyen30192/cmp-nvim-ultisnips",
-            config = function()
-                -- optional call to setup (see customization section)
-                require("cmp_nvim_ultisnips").setup {}
-            end,
-        }
-        -- "L3MON4D3/LuaSnip",
     },
 }
 
@@ -93,21 +77,18 @@ M.configfunc = function()
     local lspkind = require("lspkind")
     vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
     local cmp = require("cmp")
-    local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
-    -- local luasnip = require("luasnip")
+    local luasnip = require("luasnip")
 
     setCompHL()
     cmp.setup({
         preselect = cmp.PreselectMode.None,
         snippet = {
             expand = function(args)
-                -- luasnip.lsp_expand(args.body)
-                vim.fn["UltiSnips#Anon"](args.body)
+                luasnip.lsp_expand(args.body)
             end,
         },
         window = {
             completion = {
-                -- winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
                 col_offset = -3,
                 side_padding = 0,
             },
@@ -120,7 +101,7 @@ M.configfunc = function()
             format = function(entry, vim_item)
                 local kind = lspkind.cmp_format({
                     mode = "symbol_text",
-                    symbol_map = { Codeium = "", },
+                    symbol_map = { Codeium = "", },
                 })(entry, vim_item)
                 local strings = vim.split(kind.kind, "%s", { trimempty = true })
                 kind.kind = " " .. (strings[1] or "") .. " "
@@ -132,28 +113,28 @@ M.configfunc = function()
         sources = cmp.config.sources({
             { name = "nvim_lsp" },
             { name = "buffer" },
-            { name = "ultisnips" },
+            { name = "luasnip" },
         }, {
             { name = "path" },
             { name = "nvim_lua" },
             { name = "calc" },
-            -- { name = "luasnip" },
-            -- { name = 'tmux',    option = { all_panes = true, } },  -- this is kinda slow
         }),
         mapping = cmp.mapping.preset.insert({
             ['<C-o>'] = cmp.mapping.complete(),
-            ["<c-e>"] = cmp.mapping(
-                function()
-                    cmp_ultisnips_mappings.compose { "expand", "jump_forwards" } (function() end)
-                end,
-                { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-            ),
-            ["<c-n>"] = cmp.mapping(
-                function(fallback)
-                    cmp_ultisnips_mappings.jump_backwards(fallback)
-                end,
-                { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-            ),
+            ["<c-e>"] = cmp.mapping(function(fallback)
+                if luasnip.expand_or_jumpable() then
+                    luasnip.expand_or_jump()
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
+            ["<c-n>"] = cmp.mapping(function(fallback)
+                if luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
             ['<c-f>'] = cmp.mapping({
                 i = function(fallback)
                     cmp.close()
