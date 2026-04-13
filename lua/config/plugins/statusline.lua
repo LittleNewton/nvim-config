@@ -34,8 +34,18 @@ return {
 			sections = {
 				lualine_a = { 'filename' },
 				lualine_b = { 'branch', 'diff', 'diagnostics' },
-				lualine_c = {},
-				lualine_x = {},
+				lualine_c = {
+					{
+						function() return require("noice").api.status.mode.get() end,
+						cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+					},
+				},
+				lualine_x = {
+					{
+						function() return require("noice").api.status.search.get() end,
+						cond = function() return package.loaded["noice"] and require("noice").api.status.search.has() end,
+					},
+				},
 				lualine_y = { 'filesize', 'fileformat', 'filetype' },
 				lualine_z = { 'location' }
 			},
