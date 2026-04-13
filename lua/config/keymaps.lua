@@ -58,7 +58,7 @@ local nmappings = {
     -- Other
     { from = "<leader>sw",    to = ":set wrap<CR>" },
     { from = "<leader><CR>",  to = ":nohlsearch<CR>" },
-    { from = "<f10>",         to = ":TSHighlightCapturesUnderCursor<CR>" },
+    { from = "<f10>",         to = ":Inspect<CR>" },
     { from = "<leader>o",     to = "za" },
     { from = "<leader>pr",    to = ":profile start profile.log<CR>:profile func *<CR>:profile file *<CR>" },
     { from = "<leader>rc",    to = ":e ~/.config/nvim/init.lua<CR>" },
@@ -81,7 +81,7 @@ end
 
 -- close win below
 vim.keymap.set("n", "<leader>q", function()
-    vim.cmd("TroubleClose")
+    vim.cmd("Trouble close")
     local wins = vim.api.nvim_tabpage_list_wins(0)
     if #wins > 1 then
         run_vim_shortcut([[<C-w>j:q<CR>]])

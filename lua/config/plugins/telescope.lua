@@ -55,9 +55,7 @@ M.config = {
 
             -- vim.keymap.set('n', 'gd', builtin.lsp_definitions, m)
             -- vim.keymap.set('n', '<c-t>', builtin.lsp_document_symbols, {})
-            vim.keymap.set('n', 'gi', builtin.git_status, m)
-
-            local trouble = require("trouble.providers.telescope")
+            vim.keymap.set('n', '<leader>gi', builtin.git_status, m)
 
             local ts = require('telescope')
             local actions = require('telescope.actions')
@@ -105,8 +103,7 @@ M.config = {
                         override_file_sorter = true,
                         case_mode = "smart_case"
                     },
-                    command_palette = command_palette
-                }
+                    }
             })
             require('dressing').setup({
                 select = {
@@ -132,7 +129,6 @@ M.config = {
                 apple_simulator = true
             })
             -- ts.load_extension("ui-select")
-            ts.load_extension("flutter")
             local tsdap = ts.extensions.dap;
             vim.keymap.set("n", "<leader>'v", tsdap.variables, m)
             vim.keymap.set("n", "<leader>'a", tsdap.commands, m)

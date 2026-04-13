@@ -2,7 +2,6 @@ return {
 	"rcarriga/nvim-notify",
 	config = function()
 		local notify = require("notify")
-		vim.notify = notify
 		notify.setup({
 			on_open = function(win)
 				vim.api.nvim_win_set_config(win, { border = "none" })

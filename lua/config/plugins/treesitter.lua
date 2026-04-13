@@ -5,7 +5,6 @@
 
 
 return {
-    "nvim-treesitter/playground",
     {
         "nvim-treesitter/nvim-treesitter",
         lazy = false,
@@ -22,7 +21,6 @@ return {
                     "cmake",
                     "cpp",
                     "css",
-                    "dart",
                     "diff",
                     "dockerfile",
                     "git_config",

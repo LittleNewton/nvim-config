@@ -22,7 +22,6 @@ local server_overrides = {
 }
 
 local format_on_save_filetypes = {
-    dart = true,
     json = true,
     go = true,
     lua = true,
@@ -73,7 +72,6 @@ function F.setup_lsp()
 
     local base_opts = F.base_options()
     F.setup_servers(base_opts)
-    F.setup_flutter(base_opts)
     F.setup_auxiliary_tools()
 end
 
@@ -118,13 +116,6 @@ function F.setup_servers(base_opts)
             local config = F.merge_options(base_opts, {})
             F.register_server(name, config)
         end
-    end
-end
-
-function F.setup_flutter(base_opts)
-    local ok, configure_flutter = pcall(require, "config.lsp.flutter")
-    if ok then
-        configure_flutter(base_opts)
     end
 end
 
@@ -236,7 +227,7 @@ end
 
 function F.configure_doc_and_signature()
     vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
-        config = vim.tbl_extend("force", config or {}, {
+        config = vim.tbl_deep_extend("force", config or {}, {
             silent = true,
             focusable = false,
             border = "rounded",
