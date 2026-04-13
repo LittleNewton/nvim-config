@@ -42,7 +42,6 @@ require("lazy").setup({
     require("config.plugins.copilot"),
     require("config.plugins.debugger"),
     require("config.plugins.editor"),
-    require("config.plugins.flutter"),
     require("config.plugins.ft"),
     require("config.plugins.fzf"),
     require("config.plugins.git"),
