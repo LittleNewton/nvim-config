@@ -7,65 +7,82 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
+        branch = "main",
         lazy = false,
-        priority = 1000,
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = {
-                    "arduino",
-                    "bash",
-                    "bibtex",
-                    "c",
-                    "c_sharp",
-                    "cmake",
-                    "cpp",
-                    "css",
-                    "diff",
-                    "dockerfile",
-                    "git_config",
-                    "git_rebase",
-                    "gitattributes",
-                    "gitcommit",
-                    "gitignore",
-                    "go",
-                    "gpg",
-                    "html",
-                    "java",
-                    "javascript",
-                    "json",
-                    "lua",
-                    "make",
-                    "markdown",
-                    "prisma",
-                    "python",
-                    "query",
-                    "ruby",
-                    "rust",
-                    "sql",
-                    "ssh_config",
-                    "typescript",
-                    "vim",
-                    "vue",
-                    "yaml",
-                },
-                highlight = {
-                    enable = true,
-                    disable = {}, -- list of language that will be disabled
-                },
-                indent = {
-                    enable = false
-                },
-                incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        init_selection    = "<c-n>",
-                        node_incremental  = "<c-n>",
-                        node_decremental  = "<c-h>",
-                        scope_incremental = "<c-l>",
-                    },
-                }
+            local parsers = {
+                "arduino", "bash", "bibtex", "c", "c_sharp", "cmake", "cpp",
+                "css", "diff", "dockerfile", "git_config", "git_rebase",
+                "gitattributes", "gitcommit", "gitignore", "go", "gpg", "html",
+                "java", "javascript", "json", "lua", "make", "markdown",
+                "prisma", "python", "query", "ruby", "rust", "sql",
+                "ssh_config", "typescript", "vim", "vue", "yaml",
+            }
+            require("nvim-treesitter").install(parsers)
+
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function(ev)
+                    pcall(vim.treesitter.start, ev.buf)
+                end,
             })
+
+            local selection = {}
+            local function set_visual(node)
+                local srow, scol, erow, ecol = node:range()
+                vim.api.nvim_win_set_cursor(0, { srow + 1, scol })
+                vim.cmd("normal! v")
+                if ecol == 0 then
+                    vim.api.nvim_win_set_cursor(0, { erow, -1 })
+                else
+                    vim.api.nvim_win_set_cursor(0, { erow + 1, ecol - 1 })
+                end
+            end
+            local function init_selection()
+                local node = vim.treesitter.get_node()
+                if not node then return end
+                selection = { node }
+                set_visual(node)
+            end
+            local function node_incremental()
+                local last = selection[#selection]
+                if not last then return init_selection() end
+                local parent = last:parent()
+                if not parent then return end
+                table.insert(selection, parent)
+                set_visual(parent)
+            end
+            local function node_decremental()
+                if #selection <= 1 then return end
+                table.remove(selection)
+                set_visual(selection[#selection])
+            end
+            local scope_types = {
+                ["function_definition"] = true,
+                ["function_declaration"] = true,
+                ["method_definition"] = true,
+                ["method_declaration"] = true,
+                ["class_definition"] = true,
+                ["class_declaration"] = true,
+                ["if_statement"] = true,
+                ["for_statement"] = true,
+                ["while_statement"] = true,
+                ["block"] = true,
+            }
+            local function scope_incremental()
+                local last = selection[#selection]
+                if not last then return init_selection() end
+                local p = last:parent()
+                while p and not scope_types[p:type()] do p = p:parent() end
+                if not p then return end
+                table.insert(selection, p)
+                set_visual(p)
+            end
+
+            vim.keymap.set("n", "<c-n>", init_selection, { silent = true })
+            vim.keymap.set("x", "<c-n>", node_incremental, { silent = true })
+            vim.keymap.set("x", "<c-h>", node_decremental, { silent = true })
+            vim.keymap.set("x", "<c-l>", scope_incremental, { silent = true })
         end
     },
     {
